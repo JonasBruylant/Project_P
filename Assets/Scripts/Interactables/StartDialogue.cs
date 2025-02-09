@@ -16,7 +16,6 @@ public class StartDialogue : MonoBehaviour, IInteractable
     private List<string> _dialogueValues = new();
 
     private int _dialogueIndex = 0;
-    //TO DO: Add action map for UI to get the action to progress dialogue states
     private Coroutine _dialogueEnumerator;
 
     void Start()
@@ -50,8 +49,6 @@ public class StartDialogue : MonoBehaviour, IInteractable
     private IEnumerator DisplayText(int dialogueIndex)
     {
         TextComponent.text = "";
-        //TO DO: Finish method to display the wanted amount
-        //of text / dialogue.
 
         for (int j = 0; j < _dialogueValues[dialogueIndex].Length; j++)
         {
@@ -76,7 +73,8 @@ public class StartDialogue : MonoBehaviour, IInteractable
             return;
         }
 
+        StopCoroutine(_dialogueEnumerator);
         TextComponent.text = "";
-        StartCoroutine(DisplayText(_dialogueIndex));
+        _dialogueEnumerator = StartCoroutine(DisplayText(_dialogueIndex));
     }
 }
