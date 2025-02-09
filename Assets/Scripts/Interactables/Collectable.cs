@@ -1,16 +1,15 @@
 using UnityEngine;
 
-public class Collectable : MonoBehaviour
+public class Collectable : MonoBehaviour, IInteractable
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+    public int ItemID;
+
+    public void Interact()
+    { 
+        DataManager.Instance.CollectItem(ItemID);
+        Debug.Log($"Item with ID {ItemID} collected");
+
+        Destroy(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

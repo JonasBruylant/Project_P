@@ -10,23 +10,22 @@ public class StartDialogue : MonoBehaviour, IInteractable
     public TextMeshProUGUI TextComponent;
     public float TextSpeed = 0.2f;
     public string[] DialogueKeys;
+    public string[] DialogueItemsGotKeys;
+
+    public int ItemIDToCheck = -1;
 
     private InputAction _dialogueProgressAction;
     private InputActionMap _playerActionMap;
     private List<string> _dialogueValues = new();
+    private List<string> _dialogueItemGotValues = new();
 
     private int _dialogueIndex = 0;
     private Coroutine _dialogueEnumerator;
 
     void Start()
     {
-        var dmInstance = DialogueManager.Instance;
-        for (int i = 0; i < DialogueKeys.Length; i++)
-        {
-            if (_dialogueValues.Contains(dmInstance.GetDialogueValue(DialogueKeys[i]))) continue;
-
-            _dialogueValues.Add(dmInstance.GetDialogueValue(DialogueKeys[i]));
-        }
+        AddDialogueValuesToList(_dialogueValues, DialogueKeys);
+        AddDialogueValuesToList(_dialogueItemGotValues, DialogueItemsGotKeys);
 
         if (TextComponent != null) TextComponent.text = "";
 
@@ -34,6 +33,17 @@ public class StartDialogue : MonoBehaviour, IInteractable
         _playerActionMap = InputSystem.actions.FindActionMap("Player");
 
         _dialogueProgressAction.performed += ctx => ProgressDialogue();
+    }
+
+    private void AddDialogueValuesToList(List<string> list, string[] keyValues)
+    {
+        var dmInstance = DialogueManager.Instance;
+        for (int i = 0; i < keyValues.Length; i++)
+        {
+            if (list.Contains(dmInstance.GetDialogueValue(keyValues[i]))) continue;
+
+            list.Add(dmInstance.GetDialogueValue(keyValues[i]));
+        }
     }
 
     public void Interact()
@@ -50,19 +60,34 @@ public class StartDialogue : MonoBehaviour, IInteractable
     {
         TextComponent.text = "";
 
-        for (int j = 0; j < _dialogueValues[dialogueIndex].Length; j++)
+        if (DataManager.Instance.HasItemFromID(ItemIDToCheck))
         {
-            TextComponent.text += _dialogueValues[dialogueIndex][j];
+            for (int i = 0; i < _dialogueItemGotValues[dialogueIndex].Length; i++)
+            {
+                TextComponent.text += _dialogueItemGotValues[dialogueIndex][i];
 
-            yield return new WaitForSeconds(TextSpeed);
+                yield return new WaitForSeconds(TextSpeed);
+            }
+            yield return null;
         }
-        yield return null;
+        else
+        {
+            for (int i = 0; i < _dialogueValues[dialogueIndex].Length; i++)
+            {
+                TextComponent.text += _dialogueValues[dialogueIndex][i];
+
+                yield return new WaitForSeconds(TextSpeed);
+            }
+            yield return null;
+        }
     }
 
     private void ProgressDialogue()
     {
         ++_dialogueIndex;
-        if (_dialogueIndex >= _dialogueValues.Count)
+        int totalDialogueCount = DataManager.Instance.HasItemFromID(ItemIDToCheck) == true ? _dialogueItemGotValues.Count : _dialogueValues.Count;
+
+        if (_dialogueIndex >= totalDialogueCount)
         {
             StopCoroutine(_dialogueEnumerator);
             _dialogueIndex = 0;
