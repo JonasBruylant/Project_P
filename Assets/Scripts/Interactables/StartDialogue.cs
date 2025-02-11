@@ -23,7 +23,6 @@ public class StartDialogue : MonoBehaviour, IInteractable
     private Coroutine _dialogueEnumerator;
     private bool _isFirstDialogueLine = true;
 
-    private bool _isInteracted = false;
     private PlayerInput _playerInput;
 
     void Start()
@@ -34,11 +33,6 @@ public class StartDialogue : MonoBehaviour, IInteractable
         if (TextComponent != null) TextComponent.text = "";
 
         _playerInput = FindFirstObjectByType<PlayerInput>();
-
-        _playerInput.SwitchCurrentActionMap("UI");
-        _playerInput.actions["ProgressDialogue"].performed += ctx => OnProgressDialoguePerformed();
-
-
         _playerInput.SwitchCurrentActionMap("Player");
     }
 
@@ -56,8 +50,6 @@ public class StartDialogue : MonoBehaviour, IInteractable
     public void Interact()
     {
         _playerInput.SwitchCurrentActionMap("UI");
-        _isInteracted = true;
-
         _dialogueEnumerator = StartCoroutine(DisplayText(_dialogueIndex));
     }
 
@@ -94,41 +86,28 @@ public class StartDialogue : MonoBehaviour, IInteractable
         }
     }
 
-    private void OnProgressDialoguePerformed()
-    {
-        if (!_isInteracted) return;
 
-        // Check if the current action map is UI before proceeding
-        if (_playerInput.currentActionMap.name != "UI") return;
-
-        ProgressDialogue();
-    }
-
-
-    private void ProgressDialogue()
+    public bool ProgressDialogue()
     {
         ++_dialogueIndex;
         int totalDialogueCount = DataManager.Instance.HasItemFromID(ItemIDToCheck) == true ? _dialogueItemGotValues.Count : _dialogueValues.Count;
 
+        StopCoroutine(_dialogueEnumerator);
+        TextComponent.text = "";
+
         if (_dialogueIndex >= totalDialogueCount)
         {
             EndDialogue();
-            return;
+            return true;
         }
 
-        StopCoroutine(_dialogueEnumerator);
-        TextComponent.text = "";
         _dialogueEnumerator = StartCoroutine(DisplayText(_dialogueIndex));
+        return false;
     }
 
     private void EndDialogue()
     {
-        StopCoroutine(_dialogueEnumerator);
         _dialogueIndex = 0;
-
-        TextComponent.text = "";
-
         _playerInput.SwitchCurrentActionMap("Player");
-        _isInteracted = false;
     }
 }

@@ -4,6 +4,7 @@ using Platformer.Core;
 using UnityEngine.InputSystem;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace Platformer.Mechanics
 {
@@ -40,7 +41,8 @@ namespace Platformer.Mechanics
         private PlayerInput _playerInput;
         private LayerMask _interactableMask;
         public float InteractionDistance = 1f;
-        private bool _hasInteracted = false;
+
+        private StartDialogue _interactedDialogue;
 
         public Bounds Bounds => collider2d.bounds;
 
@@ -69,13 +71,6 @@ namespace Platformer.Mechanics
 
                 Debug.DrawLine(transform.position, transform.position + ((Vector3)_interactionDirection * 3), Color.red);
 
-                if (_playerInput.actions["Interact"].ReadValue<float>() > 0.5f)
-                {
-                    CheckInteractable();
-                    _hasInteracted = true;
-                }
-                else
-                    _hasInteracted = false;
             }
             else
                 move = Vector2.zero;
@@ -96,31 +91,42 @@ namespace Platformer.Mechanics
 
             if (_isSprinting)
             {
-                targetVelocity = move * maxSpeed * sprintMultiplier;
+                targetVelocity = maxSpeed * sprintMultiplier * move;
                 return;
             }
 
             targetVelocity = move * maxSpeed;
         }
 
-        private void CheckInteractable()
+        public void CheckInteractable(InputAction.CallbackContext callbackContext)
         {
-            if (_hasInteracted) return;
+            if (!callbackContext.canceled) return;
 
             RaycastHit2D rayHit = Physics2D.Raycast(transform.position, _interactionDirection, 3f, _interactableMask);
-            if (!rayHit)
-                return;
+            if (!rayHit) return;
 
-            if (rayHit.distance > InteractionDistance)
-                return;
+            if (rayHit.distance > InteractionDistance) return;
 
             var interactables = rayHit.transform.gameObject.GetComponents<IInteractable>();
 
-            foreach(var interactable in interactables)
+            _interactedDialogue = rayHit.transform.gameObject.GetComponent<StartDialogue>();
+
+            foreach (var interactable in interactables)
             {
                 interactable?.Interact();
             }
 
         }
+
+        public void Progress(InputAction.CallbackContext callbackContext)
+        {
+            if (_interactedDialogue == null) return;
+            if (!callbackContext.started) return;
+            if (!_interactedDialogue.ProgressDialogue()) return;
+
+            _interactedDialogue = null;
+        }
+
+        
     }
 }
