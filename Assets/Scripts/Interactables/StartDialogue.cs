@@ -8,19 +8,23 @@ public class StartDialogue : MonoBehaviour, IInteractable
 {
     public bool ShouldDisablePlayerMovement = false;
     public TextMeshProUGUI TextComponent;
-    public float TextSpeed = 0.2f;
+    public float TextSpeed = 0.02f;
     public string[] DialogueKeys;
     public string[] DialogueItemsGotKeys;
 
+    public bool HasDelay = false;
+    public float DialogueStartDelay = 0f;
     public int ItemIDToCheck = -1;
 
-    private InputAction _dialogueProgressAction;
-    private InputActionMap _playerActionMap;
     private List<string> _dialogueValues = new();
     private List<string> _dialogueItemGotValues = new();
 
     private int _dialogueIndex = 0;
     private Coroutine _dialogueEnumerator;
+    private bool _isFirstDialogueLine = true;
+
+    private bool _isInteracted = false;
+    private PlayerInput _playerInput;
 
     void Start()
     {
@@ -29,10 +33,13 @@ public class StartDialogue : MonoBehaviour, IInteractable
 
         if (TextComponent != null) TextComponent.text = "";
 
-        _dialogueProgressAction = InputSystem.actions.FindAction("UI/ProgressDialogue");
-        _playerActionMap = InputSystem.actions.FindActionMap("Player");
+        _playerInput = FindFirstObjectByType<PlayerInput>();
 
-        _dialogueProgressAction.performed += ctx => ProgressDialogue();
+        _playerInput.SwitchCurrentActionMap("UI");
+        _playerInput.actions["ProgressDialogue"].performed += ctx => OnProgressDialoguePerformed();
+
+
+        _playerInput.SwitchCurrentActionMap("Player");
     }
 
     private void AddDialogueValuesToList(List<string> list, string[] keyValues)
@@ -48,16 +55,21 @@ public class StartDialogue : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (ShouldDisablePlayerMovement)
-            _playerActionMap.Disable();
+        _playerInput.SwitchCurrentActionMap("UI");
+        _isInteracted = true;
 
-
-        _dialogueProgressAction.Enable();
         _dialogueEnumerator = StartCoroutine(DisplayText(_dialogueIndex));
     }
 
     private IEnumerator DisplayText(int dialogueIndex)
     {
+        //If the dialogue has a delay, make sure that only the first line of the dialogue has a delay on it.
+        if (HasDelay && DialogueStartDelay > 0 && _isFirstDialogueLine)
+        {
+            _isFirstDialogueLine = false;
+            yield return new WaitForSeconds(DialogueStartDelay);
+        }
+
         TextComponent.text = "";
 
         if (DataManager.Instance.HasItemFromID(ItemIDToCheck))
@@ -82,6 +94,17 @@ public class StartDialogue : MonoBehaviour, IInteractable
         }
     }
 
+    private void OnProgressDialoguePerformed()
+    {
+        if (!_isInteracted) return;
+
+        // Check if the current action map is UI before proceeding
+        if (_playerInput.currentActionMap.name != "UI") return;
+
+        ProgressDialogue();
+    }
+
+
     private void ProgressDialogue()
     {
         ++_dialogueIndex;
@@ -89,17 +112,23 @@ public class StartDialogue : MonoBehaviour, IInteractable
 
         if (_dialogueIndex >= totalDialogueCount)
         {
-            StopCoroutine(_dialogueEnumerator);
-            _dialogueIndex = 0;
-
-            TextComponent.text = "";
-            _dialogueProgressAction.Disable();
-            _playerActionMap.Enable();
+            EndDialogue();
             return;
         }
 
         StopCoroutine(_dialogueEnumerator);
         TextComponent.text = "";
         _dialogueEnumerator = StartCoroutine(DisplayText(_dialogueIndex));
+    }
+
+    private void EndDialogue()
+    {
+        StopCoroutine(_dialogueEnumerator);
+        _dialogueIndex = 0;
+
+        TextComponent.text = "";
+
+        _playerInput.SwitchCurrentActionMap("Player");
+        _isInteracted = false;
     }
 }

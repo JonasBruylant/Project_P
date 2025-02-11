@@ -6,3 +6,5 @@ begin_dialogue4,Test Dialogue4
 item_collected_dialogue1,Test Dialogue Item1
 item_collected_dialogue2,Test Dialogue Item2
 item_collected_dialogue3,Test Dialogue Item3
+delayed_dialogue1,Wow!
+delayed_dialogue2,Did that arch just transform into a meteor!?

@@ -37,13 +37,9 @@ namespace Platformer.Mechanics
         internal Animator animator;
         readonly PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
-        private InputAction m_MoveAction;
-        private InputAction m_SprintAction;
-        private InputAction m_InteractAction;
-        public List<Observer> observers;
-
+        private PlayerInput _playerInput;
         private LayerMask _interactableMask;
-        private float _interactionDistance = 1f;
+        public float InteractionDistance = 1f;
         private bool _hasInteracted = false;
 
         public Bounds Bounds => collider2d.bounds;
@@ -54,15 +50,7 @@ namespace Platformer.Mechanics
             collider2d = GetComponent<Collider2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
             animator = GetComponent<Animator>();
-
-            m_MoveAction = InputSystem.actions.FindAction("Player/Move");
-            m_MoveAction.Enable();
-
-            m_SprintAction = InputSystem.actions.FindAction("Player/Sprint");
-            m_SprintAction.Enable();
-
-            m_InteractAction = InputSystem.actions.FindAction("Player/Interact");
-            m_InteractAction.Enable();
+            _playerInput = GetComponent<PlayerInput>();
 
             _interactableMask = LayerMask.GetMask("Interactable");
         }
@@ -71,17 +59,17 @@ namespace Platformer.Mechanics
         {
             if (controlEnabled)
             {
-                move = m_MoveAction.ReadValue<Vector2>();
+                move = _playerInput.actions["Move"].ReadValue<Vector2>();
 
                 //Save last movement for interaction detection.
                 if (move.x != 0 || move.y != 0)
                     _interactionDirection = move;
 
-                _isSprinting = m_SprintAction.ReadValue<float>() > 0.5f;
+                _isSprinting = _playerInput.actions["Sprint"].ReadValue<float>() > 0.5f;
 
                 Debug.DrawLine(transform.position, transform.position + ((Vector3)_interactionDirection * 3), Color.red);
 
-                if (m_InteractAction.ReadValue<float>() > 0.5f)
+                if (_playerInput.actions["Interact"].ReadValue<float>() > 0.5f)
                 {
                     CheckInteractable();
                     _hasInteracted = true;
@@ -94,6 +82,7 @@ namespace Platformer.Mechanics
 
             base.Update();
         }
+
         protected override void ComputeVelocity()
         {
             //TO DO: Take into account vertical movement as well for sprite changes.
@@ -116,19 +105,21 @@ namespace Platformer.Mechanics
 
         private void CheckInteractable()
         {
-
             if (_hasInteracted) return;
 
             RaycastHit2D rayHit = Physics2D.Raycast(transform.position, _interactionDirection, 3f, _interactableMask);
             if (!rayHit)
                 return;
 
-            if (rayHit.distance > _interactionDistance)
+            if (rayHit.distance > InteractionDistance)
                 return;
 
-            var interactable = rayHit.transform.gameObject.GetComponent<IInteractable>();
-            interactable?.Interact();
+            var interactables = rayHit.transform.gameObject.GetComponents<IInteractable>();
 
+            foreach(var interactable in interactables)
+            {
+                interactable?.Interact();
+            }
 
         }
     }
