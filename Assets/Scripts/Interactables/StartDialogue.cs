@@ -33,7 +33,6 @@ public class StartDialogue : MonoBehaviour, IInteractable
         if (TextComponent != null) TextComponent.text = "";
 
         _playerInput = FindFirstObjectByType<PlayerInput>();
-        _playerInput.SwitchCurrentActionMap("Player");
     }
 
     private void AddDialogueValuesToList(List<string> list, string[] keyValues)
@@ -86,15 +85,14 @@ public class StartDialogue : MonoBehaviour, IInteractable
         }
     }
 
-
-    public bool ProgressDialogue()
+    public bool Progress()
     {
         ++_dialogueIndex;
-        int totalDialogueCount = DataManager.Instance.HasItemFromID(ItemIDToCheck) == true ? _dialogueItemGotValues.Count : _dialogueValues.Count;
+        int totalDialogueCount = DataManager.Instance.HasItemFromID(ItemIDToCheck) ? _dialogueItemGotValues.Count : _dialogueValues.Count;
 
         StopCoroutine(_dialogueEnumerator);
         TextComponent.text = "";
-
+        
         if (_dialogueIndex >= totalDialogueCount)
         {
             EndDialogue();
@@ -108,6 +106,7 @@ public class StartDialogue : MonoBehaviour, IInteractable
     private void EndDialogue()
     {
         _dialogueIndex = 0;
+
         _playerInput.SwitchCurrentActionMap("Player");
     }
 }
