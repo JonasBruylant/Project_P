@@ -9,6 +9,8 @@ public class FollowPlayer : MonoBehaviour
     private void Awake()
     {
         _cameraPosition = transform.position;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame

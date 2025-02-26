@@ -53,6 +53,9 @@ namespace Platformer.Mechanics
             _playerInput = GetComponent<PlayerInput>();
 
             _interactableMask = LayerMask.GetMask("Interactable");
+            
+
+            DontDestroyOnLoad(gameObject);
         }
 
         protected override void Update()
@@ -107,6 +110,8 @@ namespace Platformer.Mechanics
 
             var interactables = rayHit.transform.gameObject.GetComponents<IInteractable>();
 
+            Debug.Log($"<color=orange> Ray has hit {interactables.Length} interactables");
+            
             _interactedDialogue = rayHit.transform.gameObject.GetComponent<StartDialogue>();
             _interactableSequence = rayHit.transform.gameObject.GetComponent<InteractableSequence>();
             foreach(var interactable in interactables)
