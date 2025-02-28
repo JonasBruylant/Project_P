@@ -87,7 +87,10 @@ namespace Platformer.Mechanics
                 spriteRenderer.flipX = true;
 
             //animator.SetBool("grounded", IsGrounded);
-            animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
+            //animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
+
+            //Debug.Log($"Velocity Y: {velocity.y / maxSpeed}");
+            animator.SetFloat("velocityY", velocity.y / maxSpeed);
 
             if (_isSprinting)
             {
