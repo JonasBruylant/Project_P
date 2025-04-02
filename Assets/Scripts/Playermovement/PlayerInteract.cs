@@ -52,5 +52,4 @@ public class PlayerInteract : MonoBehaviour
     //
     //    _interactableSequence = null;
     //}
-
 }

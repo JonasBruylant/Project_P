@@ -61,18 +61,18 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.37f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Playermovement\PlayerCam.cs" />
     <Compile Include="Assets\Scripts\Dialogue\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Interactables\StartDialogue.cs" />
     <Compile Include="Assets\Scripts\Interactables\Collectable.cs" />
-    <Compile Include="Assets\Scripts\Player Movement\PlayerCam.cs" />
     <Compile Include="Assets\Scripts\Interactables\Interactable.cs" />
-    <Compile Include="Assets\Scripts\Player Movement\MoveCamera.cs" />
     <Compile Include="Assets\Scripts\DataManager\DataManager.cs" />
     <Compile Include="Assets\Scripts\Interactables\TestChangeSprite.cs" />
-    <Compile Include="Assets\Scripts\Player Movement\PlayerInteract.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
-    <Compile Include="Assets\Scripts\Player Movement\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\Playermovement\PlayerInteract.cs" />
+    <Compile Include="Assets\Scripts\Playermovement\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Interactables\SceneLoader.cs" />
+    <Compile Include="Assets\Scripts\Playermovement\MoveCamera.cs" />
     <Compile Include="Assets\Scripts\Interactables\InteractableSequence.cs" />
     <Compile Include="Assets\Scripts\FileManager\FileManager.cs" />
   </ItemGroup>
