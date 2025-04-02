@@ -225,6 +225,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8930731084874288055, guid: 24b59a5b4574855458d397fce24af563, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1577233554}
+    - targetCorrespondingSourceObject: {fileID: 8930731084874288055, guid: 24b59a5b4574855458d397fce24af563, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1577233555}
   m_SourcePrefab: {fileID: 100100000, guid: 24b59a5b4574855458d397fce24af563, type: 3}
 --- !u!4 &121666914 stripped
@@ -1106,6 +1109,25 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8930731084874288055, guid: 24b59a5b4574855458d397fce24af563, type: 3}
   m_PrefabInstance: {fileID: 121666913}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1577233554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577233551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0f5796fe4c2454fb07887e7db1ab1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 7
+  groundDrag: 5
+  playerHeight: 2
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 64
+  orientation: {fileID: 121666915}
 --- !u!143 &1577233555
 CharacterController:
   m_ObjectHideFlags: 0

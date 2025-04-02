@@ -3,11 +3,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed;
-    public float sprintMultiplier = 1.5f;
-    private bool _isSprinting = false;
 
-
-    public bool controlEnabled = true;
     public Transform orientation;
 
     float horizontalInput;
@@ -24,8 +20,6 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!controlEnabled) return;
-
         MyInput();
         MovePlayer();
 
@@ -40,11 +34,6 @@ public class PlayerMovement : MonoBehaviour
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        if(_isSprinting)
-        {
-            cc.Move(moveDirection.normalized * moveSpeed * sprintMultiplier * Time.deltaTime);
-            return;
-        }
         cc.Move(moveDirection.normalized * moveSpeed * Time.deltaTime);
     }
 }
