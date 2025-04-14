@@ -12,18 +12,27 @@ public class PlayerMovement : MonoBehaviour
 
     CharacterController cc;
 
+    DataManager dataManager;
+
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
     }
 
+    private void Start()
+    {
+        dataManager = DataManager.Instance;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (dataManager.IsPlayerMovementDisabled()) return;
+
         MyInput();
         MovePlayer();
-
     }
+
     private void MyInput()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");

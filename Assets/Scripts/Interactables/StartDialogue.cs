@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class StartDialogue : MonoBehaviour, IInteractable
 {
@@ -23,32 +22,35 @@ public class StartDialogue : MonoBehaviour, IInteractable
     private Coroutine _dialogueEnumerator;
     private bool _isFirstDialogueLine = true;
 
-    private PlayerInput _playerInput;
-
+    DataManager _dataManager;
+    DialogueManager _dialogueManager;
     void Start()
     {
+        _dataManager = DataManager.Instance;
+        _dialogueManager = DialogueManager.Instance;
+
         AddDialogueValuesToList(_dialogueValues, DialogueKeys);
         AddDialogueValuesToList(_dialogueItemGotValues, DialogueItemsGotKeys);
 
         if (TextComponent != null) TextComponent.text = "";
 
-        _playerInput = FindFirstObjectByType<PlayerInput>();
     }
 
     private void AddDialogueValuesToList(List<string> list, string[] keyValues)
     {
-        var dmInstance = DialogueManager.Instance;
+       
         for (int i = 0; i < keyValues.Length; i++)
         {
-            if (list.Contains(dmInstance.GetDialogueValue(keyValues[i]))) continue;
+            if (list.Contains(_dialogueManager.GetDialogueValue(keyValues[i]))) continue;
 
-            list.Add(dmInstance.GetDialogueValue(keyValues[i]));
+            list.Add(_dialogueManager.GetDialogueValue(keyValues[i]));
         }
     }
 
     public void Interact()
     {
-        _playerInput.SwitchCurrentActionMap("UI");
+        if(ShouldDisablePlayerMovement) _dataManager.DisablePlayerMovementAndRotation();
+        _dialogueManager.EnableDialogueBox();
         _dialogueEnumerator = StartCoroutine(DisplayText(_dialogueIndex));
     }
 
@@ -63,7 +65,7 @@ public class StartDialogue : MonoBehaviour, IInteractable
 
         TextComponent.text = "";
 
-        if (DataManager.Instance.HasItemFromID(ItemIDToCheck))
+        if (_dataManager.HasItemFromID(ItemIDToCheck))
         {
             for (int i = 0; i < _dialogueItemGotValues[dialogueIndex].Length; i++)
             {
@@ -88,7 +90,7 @@ public class StartDialogue : MonoBehaviour, IInteractable
     public bool Progress()
     {
         ++_dialogueIndex;
-        int totalDialogueCount = DataManager.Instance.HasItemFromID(ItemIDToCheck) ? _dialogueItemGotValues.Count : _dialogueValues.Count;
+        int totalDialogueCount = _dataManager.HasItemFromID(ItemIDToCheck) ? _dialogueItemGotValues.Count : _dialogueValues.Count;
 
         StopCoroutine(_dialogueEnumerator);
         TextComponent.text = "";
@@ -106,7 +108,7 @@ public class StartDialogue : MonoBehaviour, IInteractable
     private void EndDialogue()
     {
         _dialogueIndex = 0;
-
-        _playerInput.SwitchCurrentActionMap("Player");
+        _dialogueManager.DisableDialogueBox();
+        if (ShouldDisablePlayerMovement) _dataManager.EnablePlayerMovementAndRotation();
     }
 }

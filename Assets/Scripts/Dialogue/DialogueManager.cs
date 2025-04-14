@@ -7,6 +7,7 @@ public class DialogueManager : MonoBehaviour
     private Dictionary<string, string> _dialogueDict = new();
     private const string _dialogueFolder = "/Scripts/Dialogue";
 
+    public GameObject panel;
 
     void Awake()
     {
@@ -21,6 +22,8 @@ public class DialogueManager : MonoBehaviour
             Destroy(gameObject);
         }
         LoadDialogueTextFileFromCsv();
+
+        panel.SetActive(false);
     }
 
     private void LoadDialogueTextFileFromCsv()
@@ -55,5 +58,16 @@ public class DialogueManager : MonoBehaviour
 
         result = _dialogueDict[key];
         return result;
+    }
+    
+
+    public void EnableDialogueBox()
+    {
+        panel.SetActive(true);
+    }
+
+    public void DisableDialogueBox()
+    {
+        panel.SetActive(false);
     }
 }

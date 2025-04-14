@@ -11,9 +11,15 @@ public class SequenceActionEditor : PropertyDrawer
     private SerializedProperty _type;
     private SerializedProperty _sr;
     private SerializedProperty _sprite;
+
     private SerializedProperty _textComponent;
+    private SerializedProperty _panelComponent;
     private SerializedProperty _dialogueKey;
     private SerializedProperty _dialogueDelay;
+
+    private SerializedProperty _itemID;
+    private SerializedProperty _itemRenderer;
+    private SerializedProperty _itemCollider;
 
     private int padding = 5;
     
@@ -27,9 +33,13 @@ public class SequenceActionEditor : PropertyDrawer
         _sr = property.FindPropertyRelative("sr");
         _sprite = property.FindPropertyRelative("sprite");
         _textComponent = property.FindPropertyRelative("textComponent");
+        _panelComponent = property.FindPropertyRelative("panelComponent");
         _dialogueKey = property.FindPropertyRelative("dialogueKey");
         _dialogueDelay = property.FindPropertyRelative("dialogueDelay");
-        
+        _itemID = property.FindPropertyRelative("itemID");
+        _itemRenderer = property.FindPropertyRelative("itemRenderer");
+        _itemCollider = property.FindPropertyRelative("itemCollider");
+
         Rect foldOutBox = new Rect(position.min.x,position.min.y,position.size.x, EditorGUIUtility.singleLineHeight);
         property.isExpanded = EditorGUI.Foldout(foldOutBox, property.isExpanded, label);
 
@@ -43,23 +53,39 @@ public class SequenceActionEditor : PropertyDrawer
             
             var action = (SequenceAction)property.boxedValue;
             EditorGUI.PropertyField(typePopup, _type, new GUIContent("Sequence Type"));
-            
-            if (action.type == SequenceAction.SequenceActionType.AnimationAction)
+
+
+            switch (action.type)
             {
-                typePopup.y += EditorGUIUtility.singleLineHeight + padding;
-                EditorGUI.PropertyField(typePopup, _sr, new GUIContent("Sprite Renderer"));
-                typePopup.y += EditorGUIUtility.singleLineHeight + padding;
-                EditorGUI.PropertyField(typePopup, _sprite, new GUIContent("Sprite"));
-            }
-            else
-            {
-                typePopup.y += EditorGUIUtility.singleLineHeight + padding;
-                EditorGUI.PropertyField(typePopup, _textComponent, new GUIContent("Text Component"));
-                typePopup.y += EditorGUIUtility.singleLineHeight + padding;
-                EditorGUI.PropertyField(typePopup, _dialogueKey, new GUIContent("Dialogue Key"));
-                typePopup.y += EditorGUIUtility.singleLineHeight + padding;
-                EditorGUI.PropertyField(typePopup, _dialogueDelay, new GUIContent("Dialogue Delay"));
-            }            
+                case SequenceAction.SequenceActionType.AnimationAction:
+                    typePopup.y += EditorGUIUtility.singleLineHeight + padding;
+                    EditorGUI.PropertyField(typePopup, _sr, new GUIContent("Sprite Renderer"));
+                    typePopup.y += EditorGUIUtility.singleLineHeight + padding;
+                    EditorGUI.PropertyField(typePopup, _sprite, new GUIContent("Sprite"));
+                    break;
+
+                case SequenceAction.SequenceActionType.DialogueAction:
+                    typePopup.y += EditorGUIUtility.singleLineHeight + padding;
+                    EditorGUI.PropertyField(typePopup, _textComponent, new GUIContent("Text Component"));
+                    typePopup.y += EditorGUIUtility.singleLineHeight + padding;
+                    EditorGUI.PropertyField(typePopup, _panelComponent, new GUIContent("Panel Component"));
+                    typePopup.y += EditorGUIUtility.singleLineHeight + padding;
+                    EditorGUI.PropertyField(typePopup, _dialogueKey, new GUIContent("Dialogue Key"));
+                    typePopup.y += EditorGUIUtility.singleLineHeight + padding;
+                    EditorGUI.PropertyField(typePopup, _dialogueDelay, new GUIContent("Dialogue Delay"));
+                    break;
+
+                case SequenceAction.SequenceActionType.ItemPickup:
+                    typePopup.y += EditorGUIUtility.singleLineHeight + padding;
+                    EditorGUI.PropertyField(typePopup, _itemID, new GUIContent("item ID"));
+                    typePopup.y += EditorGUIUtility.singleLineHeight + padding;
+                    EditorGUI.PropertyField(typePopup, _itemRenderer, new GUIContent("item Renderer"));
+                    typePopup.y += EditorGUIUtility.singleLineHeight + padding;
+                    EditorGUI.PropertyField(typePopup, _itemCollider, new GUIContent("item Collider"));
+                    break;
+                default:
+                    break;
+            }          
         }
 
         EditorGUI.EndProperty();
@@ -72,7 +98,7 @@ public class SequenceActionEditor : PropertyDrawer
 
         if (property.isExpanded)
         {
-            totalLines += 5;
+            totalLines += 6;
         }
 
         return (EditorGUIUtility.singleLineHeight + padding) * totalLines - padding;

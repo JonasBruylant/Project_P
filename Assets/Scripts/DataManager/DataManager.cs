@@ -6,6 +6,7 @@ public class DataManager : MonoBehaviour
     public static DataManager Instance;
 
     private Dictionary<int, bool> _itemData = new();
+    private bool _isPlayerMovementDisabled = false;
     
 
     void Awake()
@@ -44,4 +45,19 @@ public class DataManager : MonoBehaviour
 
          _itemData[id] = true;
     }
+
+    public void DisablePlayerMovementAndRotation()
+    {
+        _isPlayerMovementDisabled = true;
+    }
+    public void EnablePlayerMovementAndRotation()
+    {
+        _isPlayerMovementDisabled = false;
+    }
+    public bool IsPlayerMovementDisabled()
+    {
+        return _isPlayerMovementDisabled;
+    }
+
+
 }
