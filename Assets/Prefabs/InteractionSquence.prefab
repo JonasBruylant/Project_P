@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6056090951929116185}
+  - component: {fileID: 6165923998349918936}
   - component: {fileID: 641135945597848}
   - component: {fileID: 1206015466274409821}
   - component: {fileID: 6215346248675596200}
@@ -34,6 +35,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 679723069929505741}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6165923998349918936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2634372922020643904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 777268e642ef79a40b41380ecfa13bd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequenceActions:
+  - name: Item pick up
+    type: 2
+    textComponent: {fileID: 0}
+    panelComponent: {fileID: 0}
+    dialogueKey: 
+    dialogueDelay: 0
+    sr: {fileID: 0}
+    sprite: {fileID: 0}
+    itemID: 0
+    itemRenderer: {fileID: 1206015466274409821}
+    itemCollider: {fileID: 6215346248675596200}
+  - name: First Dialogue
+    type: 0
+    textComponent: {fileID: 0}
+    panelComponent: {fileID: 0}
+    dialogueKey: sequence_interaction_dialogue1
+    dialogueDelay: 0.5
+    sr: {fileID: 0}
+    sprite: {fileID: 0}
+    itemID: 0
+    itemRenderer: {fileID: 0}
+    itemCollider: {fileID: 0}
+  - name: Second Dialogue
+    type: 0
+    textComponent: {fileID: 0}
+    panelComponent: {fileID: 0}
+    dialogueKey: sequence_interaction_dialogue2
+    dialogueDelay: 0
+    sr: {fileID: 0}
+    sprite: {fileID: 0}
+    itemID: 0
+    itemRenderer: {fileID: 0}
+    itemCollider: {fileID: 0}
 --- !u!33 &641135945597848
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -117,7 +164,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 679723069929505741}
-  - component: {fileID: 6080361236572817707}
   m_Layer: 0
   m_Name: InteractionSquence
   m_TagString: Untagged
@@ -141,46 +187,3 @@ Transform:
   - {fileID: 6056090951929116185}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6080361236572817707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3891201938614611836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 777268e642ef79a40b41380ecfa13bd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sequenceActions:
-  - name: Item pick up
-    type: 2
-    textComponent: {fileID: 0}
-    dialogueKey: 
-    dialogueDelay: 0
-    sr: {fileID: 0}
-    sprite: {fileID: 0}
-    itemID: 0
-    itemRenderer: {fileID: 1206015466274409821}
-    itemCollider: {fileID: 6215346248675596200}
-  - name: First Dialogue
-    type: 0
-    textComponent: {fileID: 0}
-    dialogueKey: sequence_interaction_dialogue1
-    dialogueDelay: 0
-    sr: {fileID: 0}
-    sprite: {fileID: 0}
-    itemID: 0
-    itemRenderer: {fileID: 0}
-    itemCollider: {fileID: 0}
-  - name: Second Dialogue
-    type: 0
-    textComponent: {fileID: 0}
-    dialogueKey: sequence_interaction_dialogue2
-    dialogueDelay: 0
-    sr: {fileID: 0}
-    sprite: {fileID: 0}
-    itemID: 0
-    itemRenderer: {fileID: 0}
-    itemCollider: {fileID: 0}
