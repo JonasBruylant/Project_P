@@ -27,7 +27,7 @@ public class PlayerCam : MonoBehaviour
 
     void Update()
     {
-        if (_dataManager.IsPlayerMovementDisabled()) return;
+        //if (_dataManager.IsPlayerMovementDisabled()) return;
 
 
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;

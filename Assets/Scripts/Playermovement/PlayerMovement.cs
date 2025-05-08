@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
         cc.Move(moveVector * Time.deltaTime);
 
 
-        if (dataManager.IsPlayerMovementDisabled()) return;
+        //if (dataManager.IsPlayerMovementDisabled()) return;
 
         MyInput();
         MovePlayer();

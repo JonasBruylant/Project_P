@@ -26,15 +26,15 @@ public class PlayerInteract : MonoBehaviour
 
     private void Update()
     {
-        if (dataManager.IsPlayerMovementDisabled())
-        {
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                OnProgressDialogue();
-                OnProgressSequence();
-            }
-            return;
-        }
+        //if (dataManager.IsPlayerMovementDisabled())
+        //{
+        //    if (Input.GetKeyUp(KeyCode.Space))
+        //    {
+        //        OnProgressDialogue();
+        //        OnProgressSequence();
+        //    }
+        //    return;
+        //}
 
 
         if (Input.GetKeyUp(KeyCode.E))
