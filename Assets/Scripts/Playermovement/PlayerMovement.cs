@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -27,6 +28,16 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Apply gravity at all times.
+        var moveVector = Vector3.zero;
+        if (cc.isGrounded == false)
+        {
+            //Add our gravity Vecotr
+            moveVector += Physics.gravity;
+        }
+        cc.Move(moveVector * Time.deltaTime);
+
+
         if (dataManager.IsPlayerMovementDisabled()) return;
 
         MyInput();
